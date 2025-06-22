@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Задания — Учитель</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="theme.css" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+    .task-card {
+      border: 1px solid #dee2e6; border-radius: 1rem; background: #fff;
+      transition: box-shadow 0.2s; height: 100%;
+    }
+    .task-card:hover { box-shadow: 0 6px 30px rgba(13, 110, 253, 0.08); }
+    .task-title { font-weight: 600; font-size: 1.1rem; }
+    .badge-topic { background: #dee2e6; color: #212529; font-size: 0.85rem; }
+    .btn-issue { font-weight: 600; font-size: 0.9rem; }
+    .filter-panel .form-select, .filter-panel .form-control { font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg bg-white border-bottom mb-4">
+    <div class="container-fluid">
+      <span class="navbar-brand fw-bold">[LOGO]</span>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="#">Мои классы</a>
+        <a class="nav-link active" href="#">Задания</a>
+        <a class="nav-link" href="#">Диагностика</a>
+        <a class="nav-link" href="#">Аналитика</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-lg pb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="fw-bold mb-0 fs-3">База заданий</h1>
+    </div>
+
+    <!-- Панель фильтров -->
+    <div class="filter-panel row g-2 mb-4 align-items-center">
+      <div class="col-auto">
+        <input type="text" class="form-control" id="searchTasks" placeholder="Поиск по названию...">
+      </div>
+      <div class="col-auto">
+        <div class="dropdown">
+          <button class="btn btn-primary dropdown-toggle text-white" id="classFilterBtn" type="button" data-bs-toggle="dropdown">
+            Все классы
+          </button>
+          <ul class="dropdown-menu" id="classFilterMenu">
+            <li><a class="dropdown-item" href="#" data-value="">Все классы</a></li>
+            <li><a class="dropdown-item" href="#" data-value="5">5 класс</a></li>
+            <li><a class="dropdown-item" href="#" data-value="6">6 класс</a></li>
+            <li><a class="dropdown-item" href="#" data-value="7">7 класс</a></li>
+            <li><a class="dropdown-item" href="#" data-value="8">8 класс</a></li>
+            <li><a class="dropdown-item" href="#" data-value="9">9 класс</a></li>
+            <li><a class="dropdown-item" href="#" data-value="10">10 класс</a></li>
+            <li><a class="dropdown-item" href="#" data-value="11">11 класс</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="dropdown">
+          <button class="btn btn-outline-secondary dropdown-toggle" id="topicFilterBtn" type="button" data-bs-toggle="dropdown">
+            Все темы
+          </button>
+          <ul class="dropdown-menu" id="topicFilterMenu">
+            <li><a class="dropdown-item" href="#" data-value="">Все темы</a></li>
+            <li><a class="dropdown-item" href="#" data-value="Обыкновенные дроби">Обыкновенные дроби</a></li>
+            <li><a class="dropdown-item" href="#" data-value="Десятичные дроби">Десятичные дроби</a></li>
+            <li><a class="dropdown-item" href="#" data-value="Проценты">Проценты</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="dropdown">
+          <button class="btn btn-outline-secondary dropdown-toggle" id="diffFilterBtn" type="button" data-bs-toggle="dropdown">
+            Любая сложность
+          </button>
+          <ul class="dropdown-menu" id="diffFilterMenu">
+            <li><a class="dropdown-item" href="#" data-value="">Любая сложность</a></li>
+            <li><a class="dropdown-item" href="#" data-value="Лёгкий">Лёгкий</a></li>
+            <li><a class="dropdown-item" href="#" data-value="Средний">Средний</a></li>
+            <li><a class="dropdown-item" href="#" data-value="Сложный">Сложный</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="dropdown">
+          <button class="btn btn-outline-secondary dropdown-toggle" id="typeFilterBtn" type="button" data-bs-toggle="dropdown">
+            Тип задания
+          </button>
+          <ul class="dropdown-menu" id="typeFilterMenu">
+            <li><a class="dropdown-item" href="#" data-value="">Тип задания</a></li>
+            <li><a class="dropdown-item" href="#" data-value="Практика">Практика</a></li>
+            <li><a class="dropdown-item" href="#" data-value="Тест">Тест</a></li>
+            <li><a class="dropdown-item" href="#" data-value="Теория">Теория</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Сетка карточек -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <div class="col">
+        <div class="task-card p-3 h-100">
+          <div class="task-title mb-2">Сложение обыкновенных дробей</div>
+          <div class="mb-2">
+            <span class="badge badge-topic">Обыкновенные дроби</span>
+            <span class="text-muted small ms-2">10 задач</span>
+          </div>
+          <div class="text-muted small mb-3">Создано: 01.06.2025</div>
+          <div class="d-flex justify-content-between align-items-center mt-auto">
+            <button class="btn btn-primary btn-sm btn-issue">Выдать</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="task-card p-3 h-100">
+          <div class="task-title mb-2">Умножение десятичных дробей</div>
+          <div class="mb-2">
+            <span class="badge badge-topic">Десятичные дроби</span>
+            <span class="text-muted small ms-2">15 задач</span>
+          </div>
+          <div class="text-muted small mb-3">Создано: 15.05.2025</div>
+          <div class="d-flex justify-content-between align-items-center mt-auto">
+            <button class="btn btn-primary btn-sm btn-issue">Выдать</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Можно дальше размножать -->
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

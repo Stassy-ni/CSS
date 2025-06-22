@@ -1,0 +1,29 @@
+/* theme.css */
+
+/* Только кастомная цветовая палитра через CSS переменные Bootstrap 5 */
+:root {
+  --bs-primary: #0d6efd;    /* Акцент (кнопки, ссылки) */
+  --bs-success: #20c997;    /* Успехи, бейджи */
+  --bs-info: #5eead4;       /* Прогресс-бары */
+  --bs-secondary: #dee2e6;  /* Разделители, бордеры */
+  --bs-light: #f8f9fa;      /* Основной фон */
+  --bs-warning: #b9bffb;    /* Лёгкие выделения, индикаторы */
+  --bs-danger: #6610f2;     /* Модальные акценты */
+  --bs-dark: #343a40;       /* Основной текст */
+  --bs-body-bg: #f8f9fa;
+  --bs-body-color: #343a40;
+}
+
+/* Шрифт меняем полностью через Bootstrap */
+body {
+  font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* Минимальная доработка ссылок */
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}

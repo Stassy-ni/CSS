@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Выдача задания — Учитель</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="theme.css" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+    .card-main { border: 1px solid #dee2e6; border-radius: 1rem; padding: 24px; background: #fff; }
+    .badge-topic { background: #dee2e6; color: #212529; font-size: 0.8rem; padding: 0.3rem 0.7rem; border-radius: 0.5rem; }
+    .info-label { color: #6c757d; font-size: 0.85rem; }
+    .info-value { font-weight: 600; font-size: 1rem; }
+    .date-input { max-width: 160px; }
+    .tag { display: inline-block; background-color: #e9ecef; padding: 4px 10px; border-radius: 20px; margin: 2px 4px; font-size: 0.9rem; }
+    .tag i { cursor: pointer; margin-left: 8px; color: #6c757d; }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg bg-white border-bottom mb-4">
+    <div class="container-fluid">
+      <span class="navbar-brand fw-bold">[LOGO]</span>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="#">Мои классы</a>
+        <a class="nav-link active" href="#">Мои задания</a>
+        <a class="nav-link" href="#">Диагностика</a>
+        <a class="nav-link" href="#">Аналитика</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-lg pb-5">
+    <h1 class="fw-bold mb-4 fs-2">Задание успешно выдано</h1>
+
+    <div class="row g-4">
+
+      <!-- Левая карточка 8 колонок -->
+      <div class="col-md-8">
+        <div class="card-main mb-3">
+          <div class="mb-2">
+            <span class="badge-topic">Обыкновенные дроби</span>
+          </div>
+          <h4>Сложение и вычитание дробей с разными знаменателями</h4>
+          <p class="mb-2 text-muted">Набор из 12 задач для закрепления навыков сложения дробей через приведение к общему знаменателю.</p>
+
+          <div class="row mb-2">
+            <div class="col-md-4">
+              <div class="info-label">Класс:</div>
+              <div class="info-value">5 «А»</div>
+            </div>
+            <div class="col-md-4">
+              <div class="info-label">Ученики выбраны:</div>
+              <div class="info-value">24 из 24</div>
+            </div>
+            <div class="col-md-4">
+              <div class="info-label">Срок выполнения:</div>
+              <div class="info-value">01.06.2025 – 05.06.2025</div>
+            </div>
+          </div>
+
+          <div class="d-flex gap-3 mt-3">
+            <button class="btn btn-outline-secondary"><i class="bi bi-x-lg me-1"></i> Отменить выдачу</button>
+            <button class="btn btn-primary"><i class="bi bi-plus-circle me-1"></i> Назначить другое задание</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Правая карточка 4 колонки -->
+      <div class="col-md-4">
+        <div class="card-main">
+
+          <h5 class="mb-3">Выдать это задание другим классам</h5>
+
+          <!-- Выпадающий кастомный мультиселект -->
+          <div class="mb-3">
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                Выбрать классы
+              </button>
+              <ul class="dropdown-menu w-100" id="dropdownList">
+                <li><a class="dropdown-item" href="#" onclick="addClass('5А')">5А</a></li>
+                <li><a class="dropdown-item" href="#" onclick="addClass('5Б')">5Б</a></li>
+                <li><a class="dropdown-item" href="#" onclick="addClass('5В')">5В</a></li>
+                <li><a class="dropdown-item" href="#" onclick="addClass('6А')">6А</a></li>
+                <li><a class="dropdown-item" href="#" onclick="addClass('6Б')">6Б</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Здесь будут теги выбранных классов -->
+          <div id="selectedTags" class="mb-3"></div>
+
+          <!-- Динамическая таблица выбранных классов -->
+          <div id="selectedClasses"></div>
+
+          <div class="text-end mt-3">
+            <button class="btn btn-primary"><i class="bi bi-send"></i> Назначить</button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const selectedTags = document.getElementById('selectedTags');
+    const selectedClasses = document.getElementById('selectedClasses');
+    const selected = new Set();
+
+    function addClass(className) {
+      if (selected.has(className)) return;
+      selected.add(className);
+      render();
+    }
+
+    function removeClass(className) {
+      selected.delete(className);
+      render();
+    }
+
+    function render() {
+      selectedTags.innerHTML = '';
+      selectedClasses.innerHTML = '';
+
+      selected.forEach(cls => {
+        selectedTags.innerHTML += `<span class="tag">${cls} <i class="bi bi-x" onclick="removeClass('${cls}')"></i></span>`;
+        я
+        selectedClasses.innerHTML += `
+          <div class="row align-items-center mb-2">
+            <div class="col-2 fw-semibold">${cls}</div>
+            <div class="col-4"><input type="date" class="form-control form-control-sm date-input"></div>
+            <div class="col-4"><input type="date" class="form-control form-control-sm date-input"></div>
+            <div class="col-2 text-end"><i class="bi bi-x-lg cursor-pointer" onclick="removeClass('${cls}')"></i></div>
+          </div>`;
+      });
+    }
+  </script>
+
+</body>
+</html>

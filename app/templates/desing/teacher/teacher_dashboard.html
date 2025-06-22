@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Дашборд учителя с расписанием и фильтрами</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="theme.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .fc .fc-toolbar-title { font-size: 1.1rem; }
+    .fc-event { border-radius: 8px !important; cursor: pointer; }
+    .fc-day-today { background-color: #e3f2fd !important; }
+    .filter-btn.active { background: #0d6efd !important; color: #fff !important; }
+    .class-badge { background: #dee2e6; color: #212529; border-radius: 6px; padding: 2px 8px; font-size: 0.95em; margin-right: 8px;}
+  </style>
+</head>
+<body class="bg-light">
+
+<div class="container-fluid">
+  <div class="row min-vh-100">
+    <!-- Sidebar -->
+    <aside class="col-md-3 col-lg-2 bg-white border-end d-none d-md-block">
+      <div class="p-4 border-bottom">
+        <h2 class="fs-4 fw-bold">[LOGO]</h2>
+      </div>
+      <nav class="nav flex-column px-3 pt-4">
+        <a class="nav-link active mb-3" href="#"><i class="bi bi-journals me-2"></i>Мои классы</a>
+        <a class="nav-link mb-3" href="#"><i class="bi bi-check2-square me-2"></i>Мои задания</a>
+        <a class="nav-link mb-3" href="#"><i class="bi bi-clipboard2-pulse me-2"></i>Диагностика</a>
+        <a class="nav-link mb-3" href="#"><i class="bi bi-graph-up-arrow me-2"></i>Аналитика</a>
+        <a class="nav-link mb-3" href="#"><i class="bi bi-envelope-paper me-2"></i>Чат с учениками</a>
+        <a class="nav-link" href="#"><i class="bi bi-gear me-2"></i>Настройки</a>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="col-12 col-md-9 col-lg-10 px-3 px-md-5 py-4">
+
+      <!-- Header -->
+      <header class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4 flex-wrap">
+        <h1 class="fw-bold fs-3 mb-0">Добро пожаловать, Иван!</h1>
+        <div class="d-flex align-items-center gap-3">
+          <a href="#" class="text-dark"><i class="bi bi-bell fs-5"></i></a>
+          <div class="dropdown">
+            <a class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" href="#" data-bs-toggle="dropdown">
+              <i class="bi bi-person-circle me-2" style="font-size: 1.4rem;"></i> Иван
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#">Профиль</a></li>
+              <li><a class="dropdown-item text-danger" href="#">Выход</a></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+
+      <!-- CTA -->
+      <div class="row g-3 mb-4">
+        <div class="col-12 col-md-5 col-lg-4">
+          <button class="btn btn-primary w-100 p-3 fs-6 rounded-4 d-flex align-items-center justify-content-center gap-2 shadow-sm" onclick="showQuickAssign()">
+            <i class="bi bi-send-plus fs-5"></i>
+            Быстро выдать задание на урок
+          </button>
+        </div>
+        <div class="col-12 col-md-4 col-lg-3">
+          <a href="#" class="btn btn-outline-primary w-100 p-3 fs-6 rounded-4 d-flex align-items-center justify-content-center gap-2 shadow-sm">
+            <i class="bi bi-calendar2-week fs-5"></i>
+            Открыть расписание классов
+          </a>
+        </div>
+        <div class="col-12 col-md-3 col-lg-2">
+          <a href="#" class="btn btn-light w-100 p-3 fs-6 rounded-4 d-flex align-items-center justify-content-center gap-2 shadow-sm">
+            <i class="bi bi-bar-chart-line fs-5"></i>
+            Аналитика по неделе
+          </a>
+        </div>
+      </div>
+
+      <!-- Фильтры по дням, классам, статусу -->
+      <div class="d-flex flex-wrap gap-2 mb-4 align-items-center">
+        <span class="text-muted me-2">Показать:</span>
+        <button class="btn btn-outline-secondary btn-sm rounded-3 filter-btn active" onclick="filterCalendar('all')">Все задания</button>
+        <button class="btn btn-outline-secondary btn-sm rounded-3 filter-btn" onclick="filterCalendar('today')">Сегодня</button>
+        <button class="btn btn-outline-secondary btn-sm rounded-3 filter-btn" onclick="filterCalendar('week')">Неделя</button>
+        <button class="btn btn-outline-secondary btn-sm rounded-3 filter-btn" onclick="filterCalendar('overdue')">Просроченные</button>
+        <button class="btn btn-outline-secondary btn-sm rounded-3 filter-btn" onclick="filterCalendar('notstarted')">Не начаты</button>
+        <span class="mx-3"></span>
+        <span class="text-muted me-2">Класс:</span>
+        <select id="classFilter" class="form-select form-select-sm d-inline-block w-auto" style="min-width: 100px;">
+          <option value="all">Все классы</option>
+          <option value="5А">5А</option>
+          <option value="6Б">6Б</option>
+          <option value="9В">9В</option>
+        </select>
+      </div>
+
+      <!-- Календарь расписания -->
+      <div class="card shadow-sm rounded-4 mb-4">
+        <div class="card-body">
+          <div class="fw-bold fs-5 mb-2"><i class="bi bi-calendar2-week me-2 text-primary"></i>Расписание и задания по дням</div>
+          <div id="calendar"></div>
+        </div>
+      </div>
+
+      <!-- Требует внимания -->
+      <div class="alert alert-danger d-flex align-items-center rounded-3 shadow-sm mb-4">
+        <i class="bi bi-exclamation-triangle-fill me-3 fs-4"></i>
+        <div>
+          <strong>Внимание!</strong> У 5А и 6Б по 2 задания не начаты, у 9В сегодня дедлайн.
+          <a href="#" class="ms-2 link-light">Посмотреть список</a>
+        </div>
+      </div>
+
+      <!-- Последние завершённые задания -->
+      <div class="card shadow-sm rounded-4 mb-4">
+        <div class="card-body">
+          <div class="fw-bold fs-5 mb-3"><i class="bi bi-lightning-charge text-warning me-2"></i>Последние завершённые задания</div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item px-0 d-flex align-items-center gap-3">
+              <span class="class-badge">5А</span>
+              <span><strong>"Сложение дробей"</strong> — сдано 23 из 25</span>
+              <span class="badge bg-success ms-auto">Выполнено</span>
+              <a href="#" class="btn btn-link btn-sm">Результаты</a>
+            </li>
+            <li class="list-group-item px-0 d-flex align-items-center gap-3">
+              <span class="class-badge">6Б</span>
+              <span><strong>"Деление натуральных чисел"</strong> — сдано 27 из 30</span>
+              <span class="badge bg-warning text-dark ms-auto">В процессе</span>
+              <a href="#" class="btn btn-link btn-sm">Результаты</a>
+            </li>
+            <li class="list-group-item px-0 d-flex align-items-center gap-3">
+              <span class="class-badge">9В</span>
+              <span><strong>"Параллелограмм"</strong> — сдано 16 из 28</span>
+              <span class="badge bg-danger ms-auto">Дедлайн сегодня</span>
+              <a href="#" class="btn btn-link btn-sm">Результаты</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Быстрое назначение задания (Модалка-демо) -->
+<div class="modal fade" id="quickAssignModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content rounded-4">
+      <div class="modal-header">
+        <h5 class="modal-title">Быстрое назначение задания</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label class="form-label">Класс</label>
+            <select class="form-select">
+              <option>5А</option>
+              <option>6Б</option>
+              <option>9В</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Тема урока</label>
+            <input type="text" class="form-control" placeholder="Например, Деление дробей">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Автоматически выдать к ближайшему уроку по расписанию?</label>
+            <select class="form-select">
+              <option>Да</option>
+              <option>Нет, указать дату вручную</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" type="submit">Назначить</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.js"></script>
+<script>
+  // Демо-данные: расписание (по классам, дням, статусу)
+  const demoEvents = [
+    {
+      id: 1,
+      title: 'Математика: "Дроби"',
+      start: '2025-06-09T10:00:00',
+      class: '5А',
+      status: 'notstarted',
+      color: '#dee2e6', // серый
+      badge: 'Не начато'
+    },
+    {
+      id: 2,
+      title: 'Алгебра: "Уравнения"',
+      start: '2025-06-10T11:00:00',
+      class: '6Б',
+      status: 'inprogress',
+      color: '#ffe066', // жёлтый
+      badge: 'В процессе'
+    },
+    {
+      id: 3,
+      title: 'Геометрия: "Параллелограмм"',
+      start: '2025-06-10T09:00:00',
+      class: '9В',
+      status: 'deadline',
+      color: '#ff7675', // красный
+      badge: 'Дедлайн'
+    },
+    {
+      id: 4,
+      title: 'Математика: "Сложение дробей"',
+      start: '2025-06-11T10:00:00',
+      class: '5А',
+      status: 'done',
+      color: '#20c997',
+      badge: 'Выполнено'
+    }
+    // Добавь больше событий по необходимости!
+  ];
+
+  function filterCalendar(type) {
+    // кнопки фильтров визуально
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    const btns = {
+      all: 0, today: 1, week: 2, overdue: 3, notstarted: 4
+    };
+    if (btns[type] !== undefined) document.querySelectorAll('.filter-btn')[btns[type]].classList.add('active');
+    window.currentFilter = type;
+    renderCalendar();
+  }
+
+  function renderCalendar() {
+    const classFilter = document.getElementById('classFilter').value;
+    let events = [...demoEvents];
+    // Фильтрация по классу
+    if (classFilter && classFilter !== 'all') {
+      events = events.filter(e => e.class === classFilter);
+    }
+    // Фильтрация по статусу
+    if (window.currentFilter && window.currentFilter !== 'all') {
+      if (window.currentFilter === 'today') {
+        const today = new Date().toISOString().split('T')[0];
+        events = events.filter(e => e.start.startsWith(today));
+      } else if (window.currentFilter === 'week') {
+        // Только эта неделя
+        const today = new Date();
+        const weekStart = new Date(today.setDate(today.getDate() - today.getDay()));
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekEnd.getDate() + 6);
+        events = events.filter(e => {
+          const d = new Date(e.start);
+          return d >= weekStart && d <= weekEnd;
+        });
+      } else if (window.currentFilter === 'overdue') {
+        events = events.filter(e => e.status === 'deadline');
+      } else if (window.currentFilter === 'notstarted') {
+        events = events.filter(e => e.status === 'notstarted');
+      }
+    }
+
+    if (window.calendarInstance) window.calendarInstance.destroy();
+    window.calendarInstance = new FullCalendar.Calendar(document.getElementById('calendar'), {
+      initialView: 'dayGridWeek',
+      locale: 'ru',
+      headerToolbar: { left: 'prev,next today', center: 'title', right: '' },
+      height: 320,
+      events: events.map(e => ({
+        title: `${e.class} — ${e.title} (${e.badge})`,
+        start: e.start,
+        color: e.color,
+        extendedProps: { ...e }
+      })),
+      eventClick: function(info) {
+        alert(`Перейти к деталям задания: ${info.event.title}`);
+      }
+    });
+    window.calendarInstance.render();
+  }
+
+  // Смена класса-фильтра
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('classFilter').addEventListener('change', function() {
+      renderCalendar();
+    });
+    window.currentFilter = 'all';
+    renderCalendar();
+  });
+
+  // Быстрое назначение задания
+  function showQuickAssign() {
+    var modal = new bootstrap.Modal(document.getElementById('quickAssignModal'));
+    modal.show();
+  }
+</script>
+</body>
+</html>
