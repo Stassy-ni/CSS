@@ -168,40 +168,6 @@ def logout():
 def contact():
     return redirect(url_for('auth.feedback'))
 
-@auth_bp.route('/feedback', methods=['GET', 'POST'])
-def feedback():
-    if request.method == 'POST':
-        # Логика отправки письма
-        try:
-            feedback = Feedback(
-                last_name=request.form.get('last_name'),
-                first_name=request.form.get('first_name'),
-                middle_name=request.form.get('middle_name', ''),  # Добавляем значение по умолчанию
-                email=request.form.get('email'),
-                message=request.form.get('message')
-            )
-            db.session.add(feedback)
-            db.session.commit()
-            
-            admin_emails = [user.email for user in User.query.filter_by(role='admin').all()]
-            for email in admin_emails:
-                send_email(
-                    email,
-                    'Новое сообщение обратной связи',
-                    f"""<h3>Новое сообщение от {feedback.first_name} {feedback.last_name}</h3>
-                    <p>Email: {feedback.email}</p>
-                    <p>Сообщение: {feedback.message}</p>"""
-                )
-            
-            flash('Сообщение отправлено!', 'success')
-            return redirect(url_for('auth.feedback'))
-            
-        except Exception as e:
-            flash(f'Ошибка: {str(e)}', 'danger')
-    
-    # Для GET запроса просто рендерим шаблон
-    return render_template('feedback.html')
-
 @auth_bp.route('/test-mail')
 def test_mail():
     success = send_email(

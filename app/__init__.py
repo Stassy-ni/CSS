@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+gfrom flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
@@ -39,14 +39,22 @@ def create_app(config_class='config.Config'):  # Значение по умол�
     from app.student import student_bp
     from app.expert import expert_bp
     from app.admin import admin_bp
-    
+    from app.api.feedback.api import api_feedback_bp
+    from app.api.feedback.views import views_feedback_bp
+
     app.register_blueprint(auth_bp)
     app.register_blueprint(teacher_bp)
     app.register_blueprint(student_bp, url_prefix='/student')
     app.register_blueprint(expert_bp, url_prefix='/expert')
     app.register_blueprint(admin_bp, url_prefix='/admin')
+    app.register_blueprint(api_feedback_bp, url_prefix='/api')
+    app.register_blueprint(views_feedback_bp)
 
     # Обработчики ошибок
+    @app.errorhandler(403)
+    def forbidden(error):
+        return jsonify({'error': str(error) or 'Доступ запрещён'}), 403
+    
     @app.errorhandler(404)
     def not_found_error(error):
         return jsonify({'error': 'Not found'}), 404
@@ -56,6 +64,20 @@ def create_app(config_class='config.Config'):  # Значение по умол�
         db.session.rollback()
         return jsonify({'error': 'Internal server error'}), 500
 
+    # Контекст для шаблонов для подсчета непрочитанных обращений
+    from flask_login import current_user
+    @app.context_processor
+    def inject_feedback_unread_count():
+        if current_user.is_authenticated:
+            from app.models import Feedback
+            count = Feedback.query.filter_by(
+                user_id=current_user.id,
+                is_processed=True,
+                is_read=False
+            ).count()
+            return dict(feedback_unread_count=count)
+        return dict(feedback_unread_count=0)
+    
     # Контекст для Flask Shell
     @app.shell_context_processor
     def make_shell_context():

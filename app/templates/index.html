@@ -22,7 +22,7 @@
                     <img src="{{ url_for('static', filename='Логотип.png') }}" alt="Логотип" height="40">
                 </div>
                 <div class="d-flex align-items-center gap-3">
-                    <a href="{{ url_for('auth.feedback') }}" class="text-gray-600 text-decoration-underline">Связаться с нами</a>
+                    <a href="{{ url_for('views_feedback.feedback_form') }}">Связаться с нами</a>
                     {% if current_user.is_authenticated %}
                         <a href="{{ url_for('auth.logout') }}" class="text-gray-600 text-decoration-none">Выход</a>
                     {% endif %}
